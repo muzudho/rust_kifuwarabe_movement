@@ -8,11 +8,9 @@ use std::sync::RwLock;
 
 
 // グローバル変数。
-#[allow(dead_code)]
 lazy_static! {
     // 棋譜。
-    #[allow(dead_code)]
-    static ref GAME_RECORD_WRAP: RwLock<GameRecord> = RwLock::new(GameRecord::new());
+    pub static ref GAME_RECORD_WRAP: RwLock<GameRecord> = RwLock::new(GameRecord::new());
 }
 
 
