@@ -2,6 +2,8 @@
 extern crate lazy_static;
 extern crate kifuwarabe_position;
 
+use CUR_POSITION_WRAP;
+use INI_POSITION_WRAP;
 use kifuwarabe_position::*;
 use std::fmt;
 use std::sync::RwLock;
@@ -236,6 +238,121 @@ impl GameRecord {
     #[allow(dead_code)]
     pub fn get_ky_hash(&mut self) -> u64 {
         self.ky_hash[self.teme]
+    }
+
+    /// 初期局面ハッシュを作り直す。先後込み。
+    pub fn create_ky0_hash(&self) -> u64 {
+        let mut hash : u64;
+
+        // グローバル変数を使う。
+        {
+            hash = INI_POSITION_WRAP.try_read().unwrap().create_hash(&self.ky_hash_seed);
+        }
+
+        // 手番ハッシュ（後手固定）
+        hash ^= self.ky_hash_seed.sn[SN_GO];
+
+        hash
+    }
+
+    /// 局面ハッシュを作り直す。先後込み。
+    pub fn create_ky1_hash(&self) -> u64 {
+        let mut hash : u64;
+
+        // グローバル変数を使う。
+        {
+            hash = CUR_POSITION_WRAP.try_read().unwrap().create_hash(&self.ky_hash_seed);
+        }
+
+        use kifuwarabe_position::Sengo::*;
+        match self.get_teban(&Jiai::Ji) {
+            Sen => { hash ^= self.ky_hash_seed.sn[SN_SEN] },
+            Go => { hash ^= self.ky_hash_seed.sn[SN_GO] },
+            _ => {},
+        }
+
+        hash
+    }
+
+    /// 入れた指し手の通り指すぜ☆（＾～＾）
+    /// callback(取った駒)
+    pub fn make_movement2<F1>(&mut self, movement: &Movement, mut callback: F1)
+        where F1 : FnMut(&KmSyurui)
+    {
+        // 取った駒を記録するために、棋譜に入れる☆
+        let cap;
+        let sn = self.get_teban(&Jiai::Ji);
+
+        // グローバル変数を使う。
+        {
+            let mut position = CUR_POSITION_WRAP.try_write().unwrap();
+            cap = make_movement(&sn, movement, &mut position);
+        }
+
+        let teme: usize = self.teme;
+        self.moves[teme] = *movement;
+        self.set_cap(teme, cap);
+
+        // 局面ハッシュを作り直す
+        let ky_hash = self.create_ky1_hash();
+        self.set_ky1_hash( ky_hash );
+        self.teme += 1;
+
+        callback(&km_to_kms(&cap));
+    }
+
+    pub fn unmake_movement2<F1>(&mut self, mut callback: F1) -> bool
+        where F1 : FnMut(&KmSyurui)
+    {
+        let mut teme: usize = self.teme;
+
+        if 0 < teme {
+            teme -= 1;
+            self.teme = teme;
+            
+            // 棋譜から読取、手目も減る
+            let cap = self.cap[teme];
+            let sn = self.get_teban(&Jiai::Ji);
+            let ss = self.get_sasite();
+
+            // グローバル変数を使う。
+            {
+                let mut position = CUR_POSITION_WRAP.try_write().unwrap();
+                unmake_movement(&sn, &ss, &cap, &mut position);
+            }
+
+            callback(&km_to_kms(&cap));
+
+            // 棋譜にアンドゥした指し手がまだ残っているが、とりあえず残しとく
+            true
+        } else {
+            false
+        }
+    }
+
+    /// 千日手を調べるために、
+    /// 現局面は、同一局面が何回目かを調べるぜ☆（＾～＾）
+    pub fn count_same_ky(&self) -> i8 {
+        let mut count = 0;
+
+        if self.get_teme() < 1 { return 0; }
+        let last_teme = self.get_teme() - 1;
+        let new_teme = self.get_teme();
+        // g_writeln( &format!( "Ｃount_same_ky last_teme={} new_teme={}", last_teme ,new_teme ) );
+        for i_teme in 0..new_teme {
+            let t = last_teme - i_teme;
+            // g_writeln( &format!( "i_teme={} t={}", i_teme, t ) );
+            if self.ky_hash[t] == self.ky_hash[last_teme] {
+                count+=1;
+            }
+        }
+
+        // 初期局面のハッシュ
+        if self.ky0_hash == self.ky_hash[last_teme] {
+            count+=1;
+        }
+
+        count
     }
 }
 
