@@ -1,8 +1,19 @@
+#[macro_use]
+extern crate lazy_static;
 extern crate kifuwarabe_position;
+
 use kifuwarabe_position::*;
 use std::fmt;
+use std::sync::RwLock;
 
 
+// グローバル変数。
+#[allow(dead_code)]
+lazy_static! {
+    // 棋譜。
+    #[allow(dead_code)]
+    static ref GAME_RECORD_WRAP: RwLock<GameRecord> = RwLock::new(GameRecord::new());
+}
 
 
 /**********
