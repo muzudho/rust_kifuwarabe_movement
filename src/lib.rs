@@ -2,8 +2,6 @@
 extern crate lazy_static;
 extern crate kifuwarabe_position;
 
-use CUR_POSITION_WRAP;
-use INI_POSITION_WRAP;
 use kifuwarabe_position::*;
 use std::fmt;
 use std::sync::RwLock;
@@ -239,14 +237,20 @@ impl GameRecord {
     pub fn get_ky_hash(&mut self) -> u64 {
         self.ky_hash[self.teme]
     }
+    /*
+    pub fn get_position_hash_seed(&self) -> KyHashSeed {
+        self.ky_hash_seed
+    }
+     */
 
     /// 初期局面ハッシュを作り直す。先後込み。
-    pub fn create_ky0_hash(&self) -> u64 {
+    pub fn create_ky0_hash(&self, position: &Kyokumen) -> u64 {
         let mut hash : u64;
 
         // グローバル変数を使う。
         {
-            hash = INI_POSITION_WRAP.try_read().unwrap().create_hash(&self.ky_hash_seed);
+            //INI_POSITION_WRAP.try_read().unwrap()
+            hash = position.create_hash(&self.ky_hash_seed);
         }
 
         // 手番ハッシュ（後手固定）
@@ -256,12 +260,13 @@ impl GameRecord {
     }
 
     /// 局面ハッシュを作り直す。先後込み。
-    pub fn create_ky1_hash(&self) -> u64 {
+    pub fn create_ky1_hash(&self, position: &Kyokumen) -> u64 {
         let mut hash : u64;
 
         // グローバル変数を使う。
         {
-            hash = CUR_POSITION_WRAP.try_read().unwrap().create_hash(&self.ky_hash_seed);
+            // CUR_POSITION_WRAP.try_read().unwrap()
+            hash = position.create_hash(&self.ky_hash_seed);
         }
 
         use kifuwarabe_position::Sengo::*;
@@ -283,16 +288,18 @@ impl GameRecord {
     /// # Returns.
     ///
     /// 0. 取った駒の種類。
-    pub fn make_movement2(&mut self, movement: &Movement) -> KmSyurui
+    pub fn make_movement2(&mut self, movement: &Movement, position: &mut Kyokumen) -> KmSyurui
     {
         // 取った駒を記録するために、棋譜に入れる☆
         let cap;
         let sn = self.get_teban(&Jiai::Ji);
 
         // グローバル変数を使う。
+        let ky_hash;
         {
-            let mut position = CUR_POSITION_WRAP.try_write().unwrap();
-            cap = make_movement(&sn, movement, &mut position);
+            // let mut position = CUR_POSITION_WRAP.try_write().unwrap();
+            cap = make_movement(&sn, movement, position);
+            ky_hash = self.create_ky1_hash(&position);
         }
 
         let teme: usize = self.teme;
@@ -300,8 +307,7 @@ impl GameRecord {
         self.set_cap(teme, cap);
 
         // 局面ハッシュを作り直す
-        let ky_hash = self.create_ky1_hash();
-        self.set_ky1_hash( ky_hash );
+        self.set_ky1_hash(ky_hash);
         self.teme += 1;
 
         km_to_kms(&cap)
@@ -313,7 +319,7 @@ impl GameRecord {
     ///
     /// 0. １手戻せたら真。戻せなかったら偽。
     /// 1. 取った駒の種類。
-    pub fn unmake_movement2(&mut self) -> (bool, KmSyurui)
+    pub fn unmake_movement2(&mut self, position: &mut Kyokumen) -> (bool, KmSyurui)
     {
         let mut teme: usize = self.teme;
 
@@ -328,8 +334,8 @@ impl GameRecord {
 
             // グローバル変数を使う。
             {
-                let mut position = CUR_POSITION_WRAP.try_write().unwrap();
-                unmake_movement(&sn, &ss, &cap, &mut position);
+                // let mut position = CUR_POSITION_WRAP.try_write().unwrap();
+                unmake_movement(&sn, &ss, &cap, position);
             }
 
             // 棋譜にアンドゥした指し手がまだ残っているが、とりあえず残しとく
