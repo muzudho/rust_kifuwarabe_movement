@@ -244,7 +244,7 @@ impl GameRecord {
      */
 
     /// 初期局面ハッシュを作り直す。先後込み。
-    pub fn create_ky0_hash(&self, position: &Kyokumen) -> u64 {
+    pub fn create_ky0_hash(&self, position: &Position) -> u64 {
         let mut hash : u64;
 
         // グローバル変数を使う。
@@ -260,7 +260,7 @@ impl GameRecord {
     }
 
     /// 局面ハッシュを作り直す。先後込み。
-    pub fn create_ky1_hash(&self, position: &Kyokumen) -> u64 {
+    pub fn create_ky1_hash(&self, position: &Position) -> u64 {
         let mut hash : u64;
 
         // グローバル変数を使う。
@@ -288,7 +288,7 @@ impl GameRecord {
     /// # Returns.
     ///
     /// 0. 取った駒の種類。
-    pub fn make_movement2(&mut self, movement: &Movement, position: &mut Kyokumen) -> KmSyurui
+    pub fn make_movement2(&mut self, movement: &Movement, position: &mut Position) -> KmSyurui
     {
         // 取った駒を記録するために、棋譜に入れる☆
         let cap;
@@ -319,7 +319,7 @@ impl GameRecord {
     ///
     /// 0. １手戻せたら真。戻せなかったら偽。
     /// 1. 取った駒の種類。
-    pub fn unmake_movement2(&mut self, position: &mut Kyokumen) -> (bool, KmSyurui)
+    pub fn unmake_movement2(&mut self, position: &mut Position) -> (bool, KmSyurui)
     {
         let mut teme: usize = self.teme;
 
@@ -498,7 +498,7 @@ impl fmt::Debug for Movement{
  *
  * return : 取った駒
  */
-pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Kyokumen) -> Koma {
+pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
     // 動かす駒
     let km;
     // 取った駒
@@ -540,7 +540,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Kyokumen) -> Koma {
  * 指し手の　進む戻る　を逆さにして、盤上の駒配置を動かすぜ☆（＾～＾）
  * 手目のカウントが増えたりはしないぜ☆（＾～＾）
  */
-pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Kyokumen){
+pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Position){
     // 移動先の駒
     let km;
 
