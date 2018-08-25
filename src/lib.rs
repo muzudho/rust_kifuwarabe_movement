@@ -313,7 +313,7 @@ impl GameRecord {
     ///
     /// 0. １手戻せたら真。戻せなかったら偽。
     /// 1. 取った駒の種類。
-    pub fn unmake_movement2<F1>(&mut self) -> (bool, KmSyurui)
+    pub fn unmake_movement2(&mut self) -> (bool, KmSyurui)
     {
         let mut teme: usize = self.teme;
 
