@@ -275,9 +275,15 @@ impl GameRecord {
     }
 
     /// 入れた指し手の通り指すぜ☆（＾～＾）
-    /// callback(取った駒)
-    pub fn make_movement2<F1>(&mut self, movement: &Movement, mut callback: F1)
-        where F1 : FnMut(&KmSyurui)
+    ///
+    /// # Arguments.
+    ///
+    /// * `movement` - 指し手。
+    ///
+    /// # Returns.
+    ///
+    /// 0. 取った駒の種類。
+    pub fn make_movement2(&mut self, movement: &Movement) -> KmSyurui
     {
         // 取った駒を記録するために、棋譜に入れる☆
         let cap;
@@ -298,11 +304,16 @@ impl GameRecord {
         self.set_ky1_hash( ky_hash );
         self.teme += 1;
 
-        callback(&km_to_kms(&cap));
+        km_to_kms(&cap)
     }
 
-    pub fn unmake_movement2<F1>(&mut self, mut callback: F1) -> bool
-        where F1 : FnMut(&KmSyurui)
+    /// １手戻す。
+    ///
+    /// # Returns.
+    ///
+    /// 0. １手戻せたら真。戻せなかったら偽。
+    /// 1. 取った駒の種類。
+    pub fn unmake_movement2<F1>(&mut self) -> (bool, KmSyurui)
     {
         let mut teme: usize = self.teme;
 
@@ -321,12 +332,10 @@ impl GameRecord {
                 unmake_movement(&sn, &ss, &cap, &mut position);
             }
 
-            callback(&km_to_kms(&cap));
-
             // 棋譜にアンドゥした指し手がまだ残っているが、とりあえず残しとく
-            true
+            (true, km_to_kms(&cap))
         } else {
-            false
+            (false, KmSyurui::Kara)
         }
     }
 
