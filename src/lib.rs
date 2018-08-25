@@ -71,7 +71,7 @@ pub struct GameRecord{
     /// 手目
     pub teme : usize,
     /// 局面ハッシュ種
-    pub ky_hash_seed : KyHashSeed,
+    pub ky_hash_seed : PositionHashSeed,
     /// 現局面ハッシュ
     pub ky_hash : [u64; TEME_LN],
     /// 初期局面ハッシュ
@@ -86,7 +86,7 @@ impl GameRecord {
     pub fn new()->GameRecord{
         GameRecord{
             teme : 0,
-            ky_hash_seed : KyHashSeed{
+            ky_hash_seed : PositionHashSeed{
                 // 盤上の駒
                 km : [[0;KM_LN];BAN_SIZE],
                 // 持ち駒
@@ -156,6 +156,24 @@ impl GameRecord {
                 Movement::new()//257要素
             ],
         }
+    }
+    pub fn clone(&self) -> GameRecord {
+        GameRecord {
+            teme: self.teme,
+            ky_hash_seed: self.ky_hash_seed.clone(),
+            ky_hash: self.ky_hash,
+            ky0_hash: self.ky0_hash,
+            cap: self.cap,
+            moves: self.moves,
+        }
+    }
+    pub fn set_all(&mut self, source: &GameRecord) {
+        self.teme = source.teme;
+        self.ky_hash_seed.set_all(&source.ky_hash_seed);
+        self.ky_hash = source.ky_hash;
+        self.ky0_hash = source.ky0_hash;
+        self.cap = source.cap;
+        self.moves = source.moves;
     }
     pub fn set_teme(&mut self, teme:usize){
         self.teme = teme
