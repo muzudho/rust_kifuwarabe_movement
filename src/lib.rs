@@ -526,8 +526,8 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
         cap = position.get_km_by_ms(ss.destination);
         if Koma::Kara as usize != cap as usize {
             // 取った駒があるなら。
-            let mg = km_to_mg(cap);
-            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}, cap {}.", mg as usize, cap as usize); }
+            let mg = km_to_mg(cap); // 玉は持ち駒にならない。
+            if KmSyurui::Num as usize <= mg as usize { panic!("Error: mg: {}, cap {}.", mg as usize, cap as usize); }
             position.add_mg(mg,1);
         }
     }
@@ -569,7 +569,7 @@ pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Positi
         _ => { 
             // 自分の持ち駒を減らす
             let mg = km_to_mg(*cap);
-            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
+            if KmSyurui::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
             position.add_mg(mg,-1);                
         }
     }
