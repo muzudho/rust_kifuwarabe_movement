@@ -527,6 +527,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
         if Koma::Kara as usize != cap as usize {
             // 取った駒があるなら。
             let mg = km_to_mg(cap);
+            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}, cap {}.", mg as usize, cap as usize); }
             position.add_mg(mg,1);
         }
     }
