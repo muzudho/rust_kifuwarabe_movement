@@ -529,6 +529,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
             let mg = km_to_mg(cap);
             if KmSyurui::Num as usize != mg as usize {
                 // 持ち駒にならない玉を省く。
+                if KmSyurui::Num as usize <= mg as usize { panic!("Error: mg: {}, cap: {}.", mg as usize, cap as usize); }
                 position.add_mg(mg,1);
             }
         }
@@ -571,6 +572,7 @@ pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Positi
         let mg = km_to_mg(*cap);
         if KmSyurui::Num as usize != mg as usize {
             // 持ち駒にならない玉を省く。
+            if KmSyurui::Num as usize <= mg as usize { panic!("Error: mg: {}, *cap: {}.", mg as usize, *cap as usize); }
             position.add_mg(mg,-1);
         }
     }
