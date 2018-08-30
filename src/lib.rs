@@ -524,9 +524,11 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
     } else {
         // 移動先升の駒を盤上から消し、自分の持ち駒に増やす
         cap = position.get_km_by_ms(ss.destination);
-        let mg = km_to_mg(cap);
-        if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
-        position.add_mg(mg,1);
+        if Koma::Kara as usize != cap as usize {
+            // 取った駒があるなら。
+            let mg = km_to_mg(cap);
+            position.add_mg(mg,1);
+        }
     }
 
     // 移動先升に駒を置く
