@@ -504,6 +504,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
     // 打かどうか
     if ss.source==SS_SRC_DA {
         km = sn_kms_to_km( &sn, &ss.drop );
+        if Koma::Num as usize <= km as usize { panic!("Error: km: {}", km as usize); }
         // 自分の持ち駒を減らす
         position.add_mg(km,-1);
     } else {
@@ -524,6 +525,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
         // 移動先升の駒を盤上から消し、自分の持ち駒に増やす
         cap = position.get_km_by_ms(ss.destination);
         let mg = km_to_mg(cap);
+        if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
         position.add_mg(mg,1);
     }
 
@@ -544,6 +546,7 @@ pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Positi
     // 打かどうか
     if ss.source==SS_SRC_DA {
         km = sn_kms_to_km(sn, &ss.drop);
+        if Koma::Num as usize <= km as usize { panic!("Error: km: {}", km as usize); }
         // 自分の持ち駒を増やす
         position.add_mg(km,1);
     } else {
@@ -563,6 +566,7 @@ pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Positi
         _ => { 
             // 自分の持ち駒を減らす
             let mg = km_to_mg(*cap);
+            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
             position.add_mg(mg,-1);                
         }
     }
