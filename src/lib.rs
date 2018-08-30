@@ -566,13 +566,12 @@ pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Positi
 
     // 移動先の駒を、取った駒（あるいは空）に戻す
     position.set_km_by_ms(ss.destination, *cap);
-    match *cap {
-        Koma::Kara =>{},
-        _ => { 
-            // 自分の持ち駒を減らす
-            let mg = km_to_mg(*cap);
-            if KmSyurui::Num as usize <= mg as usize { panic!("Error: mg: {}", mg as usize); }
-            position.add_mg(mg,-1);                
+    if Koma::Kara as usize != *cap as usize {
+        // 取った駒があるなら、自分の持ち駒を減らす
+        let mg = km_to_mg(*cap);
+        if KmSyurui::Num as usize != mg as usize {
+            // 持ち駒にならない玉を省く。
+            position.add_mg(mg,-1);
         }
     }
 
