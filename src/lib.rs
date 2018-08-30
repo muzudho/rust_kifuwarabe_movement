@@ -88,11 +88,11 @@ impl GameRecord {
             teme : 0,
             ky_hash_seed : PositionHashSeed{
                 // 盤上の駒
-                km : [[0;KM_LN];BAN_SIZE],
+                km : [[0; Koma::Num as usize]; BAN_SIZE],
                 // 持ち駒
-                mg : [[0;MG_MAX];KM_LN],
+                mg : [[0;MG_MAX]; Koma::Num as usize],
                 // 先後
-                sn : [0;SN_LN],
+                sn : [0; Sengo::Num as usize],
             },
             ky0_hash : 0,
             ky_hash : [
@@ -201,7 +201,7 @@ impl GameRecord {
                     Sengo::Sen
                 }
             },
-            _ =>{ Sengo::Owari },
+            _ =>{ Sengo::Num },
         }
     }
     /// 自分相手
@@ -258,7 +258,7 @@ impl GameRecord {
         hash = position0.create_hash(&self.ky_hash_seed);
 
         // 手番ハッシュ（後手固定）
-        hash ^= self.ky_hash_seed.sn[SN_GO];
+        hash ^= self.ky_hash_seed.sn[Sengo::Go as usize];
 
         hash
     }
@@ -272,8 +272,8 @@ impl GameRecord {
 
         use kifuwarabe_position::Sengo::*;
         match self.get_teban(&Jiai::Ji) {
-            Sen => { hash ^= self.ky_hash_seed.sn[SN_SEN] },
-            Go => { hash ^= self.ky_hash_seed.sn[SN_GO] },
+            Sen => { hash ^= self.ky_hash_seed.sn[Sengo::Sen as usize] },
+            Go => { hash ^= self.ky_hash_seed.sn[Sengo::Go as usize] },
             _ => {},
         }
 
