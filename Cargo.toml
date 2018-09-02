@@ -8,4 +8,4 @@ lazy_static = "1.1.0"
 
 [dependencies.kifuwarabe_position]
 git = "https://github.com/muzudho/rust_kifuwarabe_position.git"
-rev = "0f43771fd890e9881e8d470b84f54177fe29a7ca"
+# rev = "0f43771fd890e9881e8d470b84f54177fe29a7ca"
