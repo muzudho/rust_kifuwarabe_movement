@@ -67,6 +67,7 @@ pub const SENNTITE_NUM :i8 = 4;
 
 
 /// 棋譜
+#[derive(Copy)]
 pub struct GameRecord{
     /// 手目
     pub teme : usize,
@@ -82,8 +83,20 @@ pub struct GameRecord{
     //#[derive(Copy, Clone)]
     pub moves : [Movement; TEME_LN],
 }
+impl Clone for GameRecord {
+    fn clone(&self) -> GameRecord {
+        GameRecord {
+            teme: self.teme,
+            ky_hash_seed: self.ky_hash_seed, // clone() になる。
+            ky_hash: self.ky_hash,
+            ky0_hash: self.ky0_hash,
+            cap: self.cap,
+            moves: self.moves,
+        }
+    }
+}
 impl GameRecord {
-    pub fn new()->GameRecord{
+    pub fn default()->GameRecord{
         GameRecord{
             teme : 0,
             ky_hash_seed : PositionHashSeed{
@@ -137,34 +150,24 @@ impl GameRecord {
             ],
             moves : [
                 // 1行16要素で並べるぜ☆（＾～＾）
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),  Movement::new(),
-                Movement::new()//257要素
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),  Movement::default(),
+                Movement::default()//257要素
             ],
-        }
-    }
-    pub fn clone(&self) -> GameRecord {
-        GameRecord {
-            teme: self.teme,
-            ky_hash_seed: self.ky_hash_seed.clone(),
-            ky_hash: self.ky_hash,
-            ky0_hash: self.ky0_hash,
-            cap: self.cap,
-            moves: self.moves,
         }
     }
     pub fn set_all(&mut self, source: &GameRecord) {
@@ -182,9 +185,9 @@ impl GameRecord {
         self.teme
     }
     /// 手番
-    pub fn get_teban(&self, jiai:&Jiai)->Sengo{
+    pub fn get_teban(&self, jiai:Jiai)->Sengo{
         use kifuwarabe_position::Jiai::*;
-        match *jiai {
+        match jiai {
             Ji=>{
                 // 手番
                 if self.teme%2==0 {
@@ -205,9 +208,9 @@ impl GameRecord {
         }
     }
     /// 自分相手
-    pub fn get_jiai_by_km(&self, km:&Koma ) -> Jiai {
+    pub fn get_jiai_by_km(&self, km:Koma ) -> Jiai {
         let (sn,_kms) = km_to_sn_kms( km );
-        if sn == self.get_teban(&Jiai::Ji) { Jiai::Ji } else { Jiai::Ai }
+        if sn == self.get_teban(Jiai::Ji) { Jiai::Ji } else { Jiai::Ai }
     }
     /// 棋譜の作成
     pub fn set_movement(&mut self, mv: Movement){
@@ -271,7 +274,7 @@ impl GameRecord {
         hash = position1.create_hash(&self.ky_hash_seed);
 
         use kifuwarabe_position::Sengo::*;
-        match self.get_teban(&Jiai::Ji) {
+        match self.get_teban(Jiai::Ji) {
             Sen => { hash ^= self.ky_hash_seed.sn[Sengo::Sen as usize] },
             Go => { hash ^= self.ky_hash_seed.sn[Sengo::Go as usize] },
             _ => {},
@@ -293,12 +296,12 @@ impl GameRecord {
     {
         // 取った駒を記録するために、棋譜に入れる☆
         let cap;
-        let sn = self.get_teban(&Jiai::Ji);
+        let sn = self.get_teban(Jiai::Ji);
 
         // グローバル変数を使う。
         let ky_hash;
         {
-            cap = make_movement(&sn, movement, position1);
+            cap = make_movement(sn, movement, position1);
             ky_hash = self.create_ky1_hash(&position1);
         }
 
@@ -310,7 +313,7 @@ impl GameRecord {
         self.set_ky1_hash(ky_hash);
         self.teme += 1;
 
-        km_to_kms(&cap)
+        km_to_kms(cap)
     }
 
     /// １手戻す。
@@ -329,14 +332,14 @@ impl GameRecord {
             
             // 棋譜から読取、手目も減る
             let cap = self.cap[teme];
-            let sn = self.get_teban(&Jiai::Ji);
+            let sn = self.get_teban(Jiai::Ji);
             let ss = self.get_sasite();
 
             // グローバル変数を使う。
-            unmake_movement(&sn, &ss, &cap, position1);
+            unmake_movement(sn, &ss, cap, position1);
 
             // 棋譜にアンドゥした指し手がまだ残っているが、とりあえず残しとく
-            (true, km_to_kms(&cap))
+            (true, km_to_kms(cap))
         } else {
             (false, KmSyurui::Kara)
         }
@@ -386,7 +389,7 @@ pub struct Movement{
     pub drop : KmSyurui,
 }
 impl Movement{
-    pub fn new()->Movement{
+    pub fn default()->Movement{
         Movement{
             source: 0,
             destination: 0,
@@ -413,22 +416,22 @@ impl Movement{
     pub fn to_hash(&self)->u64{
         let mut hash = 0;
         // 正順で取り出すことを考えて、逆順で押し込む☆（＾～＾）
-        hash = push_kms_to_hash(hash, &self.drop);
+        hash = push_kms_to_hash(hash, self.drop);
         hash = push_bool_to_hash(hash, self.promotion);
         hash = push_ms_to_hash(hash, self.destination);
         push_ms_to_hash(hash, self.source)
     }
     pub fn from_hash(hash:u64)->Movement{
         // 逆順で押し込んであるんで、正順に引き出す☆（＾～＾）
-        let (hash,src) = pop_ms_from_hash(hash);
-        let (hash,dst) = pop_ms_from_hash(hash);
-        let (hash,pro) = pop_bool_from_hash(hash);
-        let (_hash,drop) = pop_kms_from_hash(hash);
+        let (hash,src2) = pop_ms_from_hash(hash);
+        let (hash,dst2) = pop_ms_from_hash(hash);
+        let (hash,pro2) = pop_bool_from_hash(hash);
+        let (_hash,drop2) = pop_kms_from_hash(hash);
         Movement{
-            source: src,
-            destination: dst,
-            promotion: pro,
-            drop: drop,
+            source: src2,
+            destination: dst2,
+            promotion: pro2,
+            drop: drop2,
         }
     }
 }
@@ -495,7 +498,7 @@ impl fmt::Debug for Movement{
  *
  * return : 取った駒
  */
-pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
+pub fn make_movement(sn:Sengo, ss:&Movement, position: &mut Position) -> Koma {
     // 動かす駒
     let km;
     // 取った駒
@@ -503,7 +506,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
 
     // 打かどうか
     if ss.source==SS_SRC_DA {
-        km = sn_kms_to_km( &sn, &ss.drop );
+        km = sn_kms_to_km( sn, ss.drop );
         if Koma::Num as usize <= km as usize { panic!("Error: km: {}", km as usize); }
         // 自分の持ち駒を減らす
         position.add_mg(km,-1);
@@ -511,7 +514,7 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
         // 打で無ければ、元の升の駒を消す。
         if ss.promotion {
             // 成りなら
-            km = km_to_prokm( &position.get_km_by_ms(ss.source) );
+            km = km_to_prokm( position.get_km_by_ms(ss.source) );
         } else {
             km = position.get_km_by_ms(ss.source);
         }
@@ -545,34 +548,33 @@ pub fn make_movement(sn:&Sengo, ss:&Movement, position: &mut Position) -> Koma {
  * 指し手の　進む戻る　を逆さにして、盤上の駒配置を動かすぜ☆（＾～＾）
  * 手目のカウントが増えたりはしないぜ☆（＾～＾）
  */
-pub fn unmake_movement(sn:&Sengo, ss:&Movement, cap:&Koma, position: &mut Position){
+pub fn unmake_movement(sn:Sengo, ss:&Movement, cap:Koma, position: &mut Position){
     // 移動先の駒
     let km;
 
     // 打かどうか
     if ss.source==SS_SRC_DA {
-        km = sn_kms_to_km(sn, &ss.drop);
+        km = sn_kms_to_km(sn, ss.drop);
         if Koma::Num as usize <= km as usize { panic!("Error: km: {}", km as usize); }
         // 自分の持ち駒を増やす
         position.add_mg(km,1);
+
+    // 打で無ければ
+    } else if ss.promotion {
+        // 成ったなら、成る前へ
+        km = prokm_to_km( position.get_km_by_ms(ss.destination) );
     } else {
-        // 打で無ければ
-        if ss.promotion {
-            // 成ったなら、成る前へ
-            km = prokm_to_km( &position.get_km_by_ms(ss.destination) );
-        } else {
-            km = position.get_km_by_ms(ss.destination);
-        }
+        km = position.get_km_by_ms(ss.destination);
     }
 
     // 移動先の駒を、取った駒（あるいは空）に戻す
-    position.set_km_by_ms(ss.destination, *cap);
-    if Koma::Kara as usize != *cap as usize {
+    position.set_km_by_ms(ss.destination, cap);
+    if Koma::Kara as usize != cap as usize {
         // 取った駒があるなら、自分の持ち駒を減らす
-        let mg = km_to_mg(*cap);
+        let mg = km_to_mg(cap);
         if (mg as usize) < (Koma::Num as usize) {
             // 持ち駒にならない玉を省く。
-            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}, *cap: {}.", mg as usize, *cap as usize); }
+            if Koma::Num as usize <= mg as usize { panic!("Error: mg: {}, *cap: {}.", mg as usize, cap as usize); }
             position.add_mg(mg,-1);
         }
     }
